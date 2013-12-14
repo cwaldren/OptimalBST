@@ -2,6 +2,7 @@
 public class Node implements Comparable<Node> {
 	private int number;
 	private double probability;
+	private int size;
 	
 	private Node leftChild;
 	private Node rightChild;
@@ -14,7 +15,7 @@ public class Node implements Comparable<Node> {
 		rightChild = null;
 		parent = null;
 	}
-	
+	public void setSize(int x) {size = x;}
 	public void setParent(Node n) { parent = n; }
 	public void setLeftChild(Node n) {
 		leftChild = n;
@@ -25,6 +26,7 @@ public class Node implements Comparable<Node> {
 		rightChild.setParent(this);
 	}
 	
+	public int getSize() {return size;}
 	public Node getLeftChild() { return leftChild; }
 	public Node getRightChild() { return rightChild; }
 
@@ -33,9 +35,9 @@ public class Node implements Comparable<Node> {
 
 	@Override
 	public int compareTo(Node o) {
-		if (this.probability > o.getProbability())
+		if (this.number > o.getNumber())
 			return 1;
-		if (this.probability < o.getProbability())
+		if (this.number < o.getNumber())
 			return -1;
 		return 0;
 	}
