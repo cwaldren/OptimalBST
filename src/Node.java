@@ -41,7 +41,33 @@ public class Node implements Comparable<Node> {
 			return -1;
 		return 0;
 	}
-	
+
+	void print(int p) {
+		
+		for(int i = 0; i < p; i++)
+			System.out.print(" ");
+		
+		System.out.println(probability);
+		if (leftChild != null)
+			leftChild.print(p+1);
+		else {
+			if (rightChild != null) {
+			for(int i = 0; i < p+1; i++)
+				System.out.print(" ");
+			System.out.println("null");
+			}
+		}
+		
+		if (rightChild != null)
+			rightChild.print(p+1);
+		else {
+			if (leftChild != null) {
+			for(int i = 0; i < p+1; i++)
+				System.out.print(" ");
+			System.out.println("null");
+			}
+		}
+	}
 	public String toString() {
 		return "Value: " + this.number + ", Probability: " + this.probability;
 	}

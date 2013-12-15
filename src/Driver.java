@@ -21,6 +21,7 @@ public class Driver {
 	
 		BST bst = new BST(BST.Method.GREEDY, numbers, probabilities);
 		bst.print();
+		bst.doOptimal();
 		
 		
 			
