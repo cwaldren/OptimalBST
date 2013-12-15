@@ -3,117 +3,175 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+
+
 public class BST {
-	private List<Node> input;
+	
 	private Method method;
 	private Node rootNode;
+	private int cost;
 
-	public BST(Method m, List<Integer> ints, List<Double> probs) {
-		method = m;
+	public BST() {
 		rootNode = null;
-		input = new ArrayList<Node>();
-		setInput(ints, probs);
+	}
+	
+	public BST(int n) {
+		rootNode = new Node(n);
 	}
 
+	public BST(int n, Node left, Node right) {
+		rootNode = new Node(n, left, right);
+	}
+	
 	public enum Method {
 		GREEDY
 	}
 
-	public void insert(Node n) {
-		rootNode = insert(rootNode, n);
-		
+//	public void insert(Node n) {
+//		rootNode = insert(rootNode, n);
+//		
+//	}
+
+	public void setCost(int c) {
+		cost = c;
+	}
+	public void printTree(){  	
+		printTree(rootNode,"");
 	}
 
-	private Node insert(Node r, Node n) {
-		if (r == null)
-			return new Node(n.getNumber(), n.getProbability());
-
-		int cmp = n.compareTo(r);
-		if (cmp < 0)
-			r.setLeftChild(insert(r.getLeftChild(), n));
-		else if (cmp > 0)
-			r.setRightChild(insert(r.getRightChild(), n));
-		else {
-			// do nothing
+	private void printTree(Node currentNode,String tabs){
+		if(currentNode!=null){
+			tabs+="\t";
+			printTree(currentNode.getRightChild(),tabs);
+			System.out.println(tabs+currentNode.getKey()+"\n");
+			printTree(currentNode.getLeftChild(),tabs);
 		}
-		r.setSize(1 + sizeOf(r.getLeftChild()) + sizeOf(r.getRightChild()));
-		return r;
-	}
-
-	public void setInput(List<Integer> numbers, List<Double> probabilities) {
-		for (int i = 0; i < numbers.size(); i++) {
-			input.add(new Node(numbers.get(i), probabilities.get(i)));
-		}
-		Collections.sort(input, new ProbabilityComparator());
-		List<Node> inputTemp = new ArrayList<Node>(input);
-
-		while (!inputTemp.isEmpty()) {
-			Node n = Collections.min(inputTemp, new ProbabilityComparator());
-			insert(n);
-			inputTemp.remove(n);
-		}
-
 	}
 	
-	public void doOptimal() {
-		int n = input.size();
-		int i, j, k, r;
-		double t;
-		//e = cost
-		double[][] cost   = new double[n + 1][n + 1];
-		double[][] weight = new double[n + 1][n + 1];
-		int[][] root      = new int[n + 1][n + 1];
-		
-		
-		for (i = 1; i <= n + 1; i++) {
-			cost[i][i - 1]   = 0;
-			weight[i][i - 1] = 0;
-		}
-		
-		for (k = 1; k <= n; k++) {
-			for (i = 1; i <=n; i++) {
-				j = i + k + 1;
-				cost[i][j] = Double.MAX_VALUE;
-				weight[i][j] = weight[i][j - 1] + input.get(j).getProbability();
-				
-				for (r = i; r <= j; r++) {
-					t = cost[i][r - 1] + cost[r + 1][j] + weight[i][j];
-					if (t < cost[i][j]) {
-						cost[i][j] = t;
-						root[]
-					}
-				}
-			}
-		}
-	}
+//	private Node insert(Node r, Node n) {
+//		if (r == null)
+//			return new Node(n.getNumber(), n.getProbability());
+//
+//		int cmp = n.compareTo(r);
+//		if (cmp < 0)
+//			r.setLeftChild(insert(r.getLeftChild(), n));
+//		else if (cmp > 0)
+//			r.setRightChild(insert(r.getRightChild(), n));
+//		else {
+//			// do nothing
+//		}
+//		r.setSize(1 + sizeOf(r.getLeftChild()) + sizeOf(r.getRightChild()));
+//		return r;
+//	}
 
-	public void print() {
-		rootNode.print(0);
-	}
-	
-
+//	public void setInput(List<Integer> numbers, List<Double> probabilities) {
+//		for (int i = 0; i < numbers.size(); i++) {
+//			input.add(new Node(numbers.get(i), probabilities.get(i)));
+//		}
+//		Collections.sort(input, new ProbabilityComparator());
+//		List<Node> inputTemp = new ArrayList<Node>(input);
+//
+//		while (!inputTemp.isEmpty()) {
+//			Node n = Collections.min(inputTemp, new ProbabilityComparator());
+//			insert(n);
+//			inputTemp.remove(n);
+//		}
+//
+//	}
 	
 	
-	public int size() {
-		return sizeOf(rootNode);
+//	
+//	public int size() {
+//		return sizeOf(rootNode);
+//	}
+//
+//	private int sizeOf(Node n) {
+//		if (n == null)
+//			return 0;
+//		else
+//			return n.getSize();
+//	}
+
+
+
+	public int getCost(){
+		return cost;
 	}
 
-	private int sizeOf(Node n) {
-		if (n == null)
-			return 0;
-		else
-			return n.getSize();
+	public Node getRootNode(){
+		return rootNode;
 	}
 
-	class ProbabilityComparator implements Comparator<Node> {
-		public int compare(Node a, Node b) {
-			if (a.getProbability() > b.getProbability())
-				return -1;
-			if (a.getProbability() < b.getProbability())
-				return 1;
-			return 0;
-		}
+	public int getRootNodeKey(){
+		return rootNode.getKey();
 	}
 
+private class Node  {
+	private int key;
+	private Node leftChild;
+	private Node rightChild;
 	
+	public Node() {
+		key = 0;
+		leftChild = null;
+		rightChild = null;
+	}
+	
+	public Node(int n) {
+		key = n;
+		leftChild = null;
+		rightChild = null;
+	}
+	
+	public Node(int n, Node left, Node right) {
+		key = n;
+		leftChild = left;
+		rightChild = right;
+	}
+	
+	
+	public int getKey() {
+		return key;
+	}
+	
+	public Node getLeftChild() {
+		return leftChild;
+	}
+	
+	public Node getRightChild() {
+		return rightChild;
+	}
+
+
+
+
+//	void print(int p) {
+//		
+//		for(int i = 0; i < p; i++)
+//			System.out.print(" ");
+//		
+//		System.out.println(probability);
+//		if (leftChild != null)
+//			leftChild.print(p+1);
+//		else {
+//			if (rightChild != null) {
+//			for(int i = 0; i < p+1; i++)
+//				System.out.print(" ");
+//			System.out.println("null");
+//			}
+//		}
+//		
+//		if (rightChild != null)
+//			rightChild.print(p+1);
+//		else {
+//			if (leftChild != null) {
+//			for(int i = 0; i < p+1; i++)
+//				System.out.print(" ");
+//			System.out.println("null");
+//			}
+//		}
+//	}
+	
+}
+
 }

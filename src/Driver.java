@@ -9,21 +9,18 @@ public class Driver {
 	
 	public static void main(String[] args) {
 		
-		//Greedy method
+
+		OptimalBST opt = new OptimalBST();
+		int[] numbers = new int[] {1, 2, 3, 4, 5, 6, 7};
+		double[] probabilities = new double[] {.22, .18, .20, .05, .25, .02, .08};
+
+		
+		for (int i = 0; i < numbers.length; i++) 
+			opt.addKey(numbers[i], probabilities[i]);
 		
 		
-		List<Integer> numbers = new ArrayList<Integer>(
-				Arrays.asList(1, 2, 3, 4, 5, 6, 7)
-		);
-		List<Double> probabilities = new ArrayList<Double>(
-				Arrays.asList(.22, .18, .20, .05, .25, .02, .08)
-		);
-	
-		BST bst = new BST(BST.Method.GREEDY, numbers, probabilities);
-		bst.print();
-		bst.doOptimal();
-		
-		
+		BST best = opt.optimize();
+		best.printTree();
 			
 	}
 }
