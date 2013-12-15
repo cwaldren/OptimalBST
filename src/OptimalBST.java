@@ -16,6 +16,7 @@ public class OptimalBST {
 	public void addKey(int n, double freq) {
 		keys.add(new Key(n, freq));
 	}
+	
 	private class ProbabilityComparator implements Comparator<Key> {
 		public int compare(Key a, Key b) {
 			if (a.getFreq() > b.getFreq())
@@ -25,6 +26,7 @@ public class OptimalBST {
 			return 0;
 		}
 	}
+	
 	public Key[] sortKeys() {
 		Collections.sort(keys);
 		Key[] sorted = new Key[keys.size()];
@@ -40,34 +42,34 @@ public class OptimalBST {
 	}
 	
 	private BST optimize(Key[] keys, int left, int right, BST[][] bs) {
-		BST t = new BST(0);
+		BST t = new BST(-1);
 		
 		if (left <= right) 
 			if (bs[left][right] != null) 
 				return bs[left][right];
 			
-		int cost = 0;
+		double cost = 0;
 		for (int i = left; i <= right; i++) {
 			cost += keys[i].getFreq();
 		}
 		
 		if (right <= left || left >= right) {
 			if (left == right) {
-				BST temp = new BST(0);
+				BST temp = new BST(-1);
 				t = new BST(keys[right].getValue(), temp.getRootNode(), temp.getRootNode());
 				t.setCost(cost);
 			} else {
-				return new BST(0);
+				return new BST(-1);
 			}
 		} else {
 			for (int i = left; i <= right; i++) {
 				BST leftTree = optimize(keys, left, i - 1, bs);
 				BST rightTree = optimize(keys, i + 1, right, bs);
 				
-				BST testTree = new BST(keys[i].getValue(), leftTree.getRootNode(), leftTree.getRootNode());
+				BST testTree = new BST(keys[i].getValue(), leftTree.getRootNode(), rightTree.getRootNode());
 				testTree.setCost(leftTree.getCost() + rightTree.getCost() + cost);
 
-				if (t.getRootNodeKey() == 0 || t.getCost() > testTree.getCost()) {
+				if (t.getRootNodeKey() == -1 || t.getCost() > testTree.getCost()) {
 					t = testTree;
 				}
 			}
@@ -85,11 +87,6 @@ public class OptimalBST {
 	private class Key implements Comparable<Key> {
 		private int value;
 		private double freq;
-
-		public Key() {
-			value = 0;
-			freq = 0;
-		}
 
 		public Key(int n, double f) {
 			value = n;
