@@ -1,9 +1,9 @@
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
+//credit to github
 
 public class OptimalBST {
 	private List<Key> keys;
@@ -12,20 +12,16 @@ public class OptimalBST {
 		keys = new ArrayList<Key>();
 	}
 	
+
+	public OptimalBST(List<Key> k) {
+		keys = k;
+	}
 	
 	public void addKey(int n, double freq) {
 		keys.add(new Key(n, freq));
 	}
 	
-	private class ProbabilityComparator implements Comparator<Key> {
-		public int compare(Key a, Key b) {
-			if (a.getFreq() > b.getFreq())
-				return -1;
-			if (a.getFreq() < b.getFreq())
-				return 1;
-			return 0;
-		}
-	}
+	
 	
 	public Key[] sortKeys() {
 		Collections.sort(keys);
@@ -84,36 +80,6 @@ public class OptimalBST {
 	}
 	
 	
-	private class Key implements Comparable<Key> {
-		private int value;
-		private double freq;
-
-		public Key(int n, double f) {
-			value = n;
-			freq = f;
-		}
-
-		public int getValue() {
-			return value;
-		}
-
-		public double getFreq() {
-			return freq;
-		}
-
-		// Override compareTo
-		public int compareTo(Key k) {
-			if (value > k.getValue())
-				return 1;
-			if (value < k.getValue())
-				return -1;
-			return 0;
-		}
-
-		public String toString() {
-			return "(" + value + "," + freq + ")";
-		}
-
-	}
+	
 
 }

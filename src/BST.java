@@ -1,11 +1,7 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+
 
 public class BST {
 
-	private Method method;
 	private Node rootNode;
 	private double cost;
 
@@ -21,74 +17,89 @@ public class BST {
 		rootNode = new Node(n, left, right);
 	}
 
-	public enum Method {
-		GREEDY
-	}
 
-	// public void insert(Node n) {
-	// rootNode = insert(rootNode, n);
-	//
-	// }
+	public void insert(Node n) {
+		 rootNode = insert(rootNode, n);
+	}
 
 	public void setCost(double c) {
 		cost = c;
 	}
 
+
 	public void printTree() {
+		
 		printTree(rootNode, "");
+		System.out.println("Cost: " + String.format("%.3g", cost));
 	}
 
-	private void printTree(Node currentNode, String tabs) {
-		if (currentNode != null) {
-			tabs += "\t";
-			printTree(currentNode.getRightChild(), tabs);
-			System.out.println(tabs + currentNode.getKey() + "\n");
-			printTree(currentNode.getLeftChild(), tabs);
+	private void printTree(Node current, String padding) {
+
+		padding += " ";
+
+		System.out.println(padding + (current.getKey() == -1 ? "$" : current.getKey()));
+		if (!(current.getLeftChild() == null || current.getLeftChild().getKey() == -1) || 
+			!(current.getRightChild() == null || current.getRightChild().getKey() == -1)) {
+		
+			if (current.getLeftChild() != null)
+				printTree(current.getLeftChild(), padding);
+			else
+				System.out.println(padding + " $");
+			if (current.getRightChild() != null)
+				printTree(current.getRightChild(), padding);
+			else
+				System.out.println(padding + " $");
 		}
+		
+	
 	}
 
-	// private Node insert(Node r, Node n) {
-	// if (r == null)
-	// return new Node(n.getNumber(), n.getProbability());
-	//
-	// int cmp = n.compareTo(r);
-	// if (cmp < 0)
-	// r.setLeftChild(insert(r.getLeftChild(), n));
-	// else if (cmp > 0)
-	// r.setRightChild(insert(r.getRightChild(), n));
-	// else {
-	// // do nothing
-	// }
-	// r.setSize(1 + sizeOf(r.getLeftChild()) + sizeOf(r.getRightChild()));
-	// return r;
-	// }
+	public double getCostNode(int k) {
+		Node current = rootNode;
+		int depth = 0;
+	
+		while (current != null) {
+			depth++;
+			if (current.getKey() == k)
+				return depth * current.getFreq();
+			else if (k < current.getKey()) {
+				current = current.getLeftChild();
+			} else {
+				current = current.getRightChild(); 
+			}
+		}
+		return 0;
+		
+		
+	}
 
-	// public void setInput(List<Integer> numbers, List<Double> probabilities) {
-	// for (int i = 0; i < numbers.size(); i++) {
-	// input.add(new Node(numbers.get(i), probabilities.get(i)));
-	// }
-	// Collections.sort(input, new ProbabilityComparator());
-	// List<Node> inputTemp = new ArrayList<Node>(input);
-	//
-	// while (!inputTemp.isEmpty()) {
-	// Node n = Collections.min(inputTemp, new ProbabilityComparator());
-	// insert(n);
-	// inputTemp.remove(n);
-	// }
-	//
-	// }
+	 private Node insert(Node r, Node n) {
+		 if (r == null)
+			 return new Node(n.getKey(), n.getFreq());
+		
+		 int cmp = n.compareTo(r);
+		 if (cmp < 0)
+			 r.setLeftChild(insert(r.getLeftChild(), n));
+		 else if (cmp > 0)
+			 r.setRightChild(insert(r.getRightChild(), n));
+		 else {
+			 // do nothing, don't insert
+		 }
+		 r.setSize(1 + sizeOf(r.getLeftChild()) + sizeOf(r.getRightChild()));
+		 return r;
+	 }
 
-	//
-	// public int size() {
-	// return sizeOf(rootNode);
-	// }
-	//
-	// private int sizeOf(Node n) {
-	// if (n == null)
-	// return 0;
-	// else
-	// return n.getSize();
-	// }
+
+	 public int size() {
+		 return sizeOf(rootNode);
+	 }
+	
+	 private int sizeOf(Node n) {
+		 if (n == null)
+			 return 0;
+		 else
+			 return n.getSize();
+	 }
 
 	public double getCost() {
 		return cost;
@@ -102,62 +113,14 @@ public class BST {
 		return rootNode.getKey();
 	}
 
-	private class Node {
-		private int key;
-		private Node leftChild;
-		private Node rightChild;
-
-		public Node(int n) {
-			key = n;
-			leftChild = null;
-			rightChild = null;
-		}
-
-		public Node(int n, Node left, Node right) {
-			key = n;
-			leftChild = left;
-			rightChild = right;
-		}
-
-		public int getKey() {
-			return key;
-		}
-
-		public Node getLeftChild() {
-			return leftChild;
-		}
-
-		public Node getRightChild() {
-			return rightChild;
-		}
-
-		// void print(int p) {
-		//
-		// for(int i = 0; i < p; i++)
-		// System.out.print(" ");
-		//
-		// System.out.println(probability);
-		// if (leftChild != null)
-		// leftChild.print(p+1);
-		// else {
-		// if (rightChild != null) {
-		// for(int i = 0; i < p+1; i++)
-		// System.out.print(" ");
-		// System.out.println("null");
-		// }
-		// }
-		//
-		// if (rightChild != null)
-		// rightChild.print(p+1);
-		// else {
-		// if (leftChild != null) {
-		// for(int i = 0; i < p+1; i++)
-		// System.out.print(" ");
-		// System.out.println("null");
-		// }
-		// }
-		// }
-
+	@Override
+	public boolean equals(Object o) {
+		BST other = (BST) o;
+		return (Math.abs(cost - other.getCost()) <= .001) && (rootNode.getKey() == other.getRootNode().getKey());
 	}
 
+	
+	
+	
+	
 }
